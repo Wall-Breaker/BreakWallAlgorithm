@@ -1,0 +1,84 @@
+class Solution {
+
+    //【me】
+    public List<Integer> findAnagrams(String s, String t) {
+        int left = 0;
+        int right = 0;
+        int count = 0;
+        Map<Character,Integer> need = new HashMap<>();
+        Map<Character,Integer> window = new HashMap<>();
+        List<Integer> result = new ArrayList<>();
+        //填充need
+        char[] chars = t.toCharArray();
+        for(int i=0;i<t.length();i++){
+            char temp = chars[i];
+            need.put(temp,need.getOrDefault(temp,0)+1);
+        }
+        while(right < s.length()){
+            char rightChar = s.charAt(right);
+            if(need.containsKey(rightChar)){
+                window.put(rightChar,window.getOrDefault(rightChar,0)+1);
+                if(window.get(rightChar).equals(need.get(rightChar))){
+                    count++;
+                }
+            }
+            while(right-left+1 == t.length()){
+                if(count == need.size()){
+                    result.add(left);
+                }
+                char leftChar = s.charAt(left);
+                left++;
+                if(need.containsKey(leftChar)){
+                    if(window.get(leftChar).equals(need.get(leftChar))){
+                        count--;
+                    }
+                    window.put(leftChar,window.get(leftChar)-1);
+                }
+            }
+            right++;
+        }
+        return result;
+    }
+
+    // //【labuladong】
+    // public List<Integer> findAnagrams(String s, String t) {
+    //     Map<Character, Integer> need = new HashMap<>();
+    //     Map<Character, Integer> window = new HashMap<>();
+    //     for (int i = 0; i < t.length(); i++) {
+    //         char c = t.charAt(i);
+    //         need.put(c, need.getOrDefault(c, 0) + 1);
+    //     }
+
+    //     int left = 0, right = 0;
+    //     int valid = 0;
+    //     List<Integer> res = new ArrayList<>(); // 记录结果
+    //     while (right < s.length()) {
+    //         char c = s.charAt(right);
+    //         right++;
+    //         // 进行窗口内数据的一系列更新
+    //         if (need.containsKey(c)) {
+    //             window.put(c, window.getOrDefault(c, 0) + 1);
+    //             if (window.get(c).equals(need.get(c))) {
+    //                 valid++;
+    //             }
+    //         }
+    //         // 判断左侧窗口是否要收缩
+    //         while (right - left >= t.length()) {
+    //             // 当窗口符合条件时，把起始索引加入 res
+    //             if (valid == need.size()) {
+    //                 res.add(left);
+    //             }
+    //             char d = s.charAt(left);
+    //             left++;
+    //             // 进行窗口内数据的一系列更新
+    //             if (need.containsKey(d)) {
+    //                 if (window.get(d).equals(need.get(d))) {
+    //                     valid--;
+    //                 }
+    //                 window.put(d, window.get(d) - 1);
+    //             }
+    //         }
+    //     }
+    //     return res;
+    // }
+}
