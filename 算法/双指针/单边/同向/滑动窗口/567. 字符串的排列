@@ -1,0 +1,83 @@
+class Solution {
+
+    //【labuladong写法】
+    // // 注意：java 代码由 chatGPT🤖 根据我的 cpp 代码翻译，旨在帮助不同背景的读者理解算法逻辑。
+    // // 本代码还未经过力扣测试，仅供参考，如有疑惑，可以参照我写的 cpp 代码对比查看。
+
+    // public boolean checkInclusion(String t, String s) {
+    //     HashMap<Character, Integer> need = new HashMap<>();
+    //     HashMap<Character, Integer> window = new HashMap<>();
+    //     for (int i = 0; i < t.length(); i++) {
+    //         char c = t.charAt(i);
+    //         need.put(c, need.getOrDefault(c, 0) + 1);
+    //     }
+
+    //     int left = 0, right = 0;
+    //     int valid = 0;
+    //     while (right < s.length()) {
+    //         char c = s.charAt(right);
+    //         right++;
+    //         if (need.containsKey(c)) {
+    //             window.put(c, window.getOrDefault(c, 0) + 1);
+    //             if (window.get(c).equals(need.get(c)))
+    //                 valid++;
+    //         }
+
+    //         // 判断左侧窗口是否要收缩
+    //         while (right - left >= t.length()) {
+    //             // 在这里判断是否找到了合法的子串
+    //             if (valid == need.size())
+    //                 return true;
+    //             char d = s.charAt(left);
+    //             left++;
+    //             if (need.containsKey(d)) {
+    //                 if (window.get(d).equals(need.get(d)))
+    //                     valid--;
+    //                 window.put(d, window.getOrDefault(d, 0) - 1);
+    //             }
+    //         }
+    //     }
+    //     // 未找到符合条件的子串
+    //     return false;
+    // }
+
+    //【我的写法】
+    public boolean checkInclusion(String t, String s) {
+        HashMap<Character, Integer> need = new HashMap<>();
+        HashMap<Character, Integer> window = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            need.put(c, need.getOrDefault(c, 0) + 1);
+        }
+
+        int left = 0, right = 0;
+        int valid = 0;
+        while (right < s.length()) {
+            char c = s.charAt(right);
+            if (need.containsKey(c)) {
+                window.put(c, window.getOrDefault(c, 0) + 1);
+                if (window.get(c).equals(need.get(c)))
+                    valid++;
+            }
+
+            // 判断左侧窗口是否要收缩
+            while (right - left + 1 == t.length()) {
+                // 在这里判断是否找到了合法的子串
+                if (valid == need.size())
+                    return true;
+                char d = s.charAt(left);
+                left++;
+                if (need.containsKey(d)) {
+                    if (window.get(d).equals(need.get(d)))
+                        valid--;
+                    window.put(d, window.getOrDefault(d, 0) - 1);
+                }
+            }
+            right++;
+
+        }
+        // 未找到符合条件的子串
+        return false;
+    }
+
+}
